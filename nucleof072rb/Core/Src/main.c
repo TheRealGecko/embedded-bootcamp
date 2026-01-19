@@ -57,9 +57,9 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void spiTransmitReceive(uint8_t *tx, uint8_t *rx, uint16_t size) {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
 	HAL_SPI_TransmitReceive(&hspi1, tx, rx, size, 100); // maybe set timeout to something else
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
 }
 
 void adcToPwm(uint8_t *rx) {
@@ -87,7 +87,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -103,21 +102,18 @@ int main(void)
   MX_SPI1_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t tx[] = {0x01, 0x80, 0x00}; // Data to send
-  uint8_t rx[3];
-
-  HAL_SPI_MspInit(&hspi1);
-  HAL_TIM_PWM_MspInit(&htim1);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
+  uint8_t tx[3] = {0x01, 0x80, 0x00}; // Data to send
+  uint8_t rx[3];
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-     spiTransmitReceive(&tx, &rx, 3);
-	 adcToPwm(&rx);
+     spiTransmitReceive(tx, rx, 3);
+	 adcToPwm(rx);
 	 HAL_Delay(10);
     /* USER CODE END WHILE */
 
