@@ -65,7 +65,7 @@ void spiTransmitReceive(uint8_t *tx, uint8_t *rx, uint16_t size) {
 void adcToPwm(uint8_t *rx) {
 	uint8_t rxVal1 = (rx[1] << 6) >> 6;
 	uint16_t rxVal = (rxVal1 << 8) | rx[2]; // 3000 - 6000
-	uint16_t countVal = rxVal * (3000/1023) + 3000;
+	uint16_t countVal = rxVal * (3000.0/1023.0) + 3000.0;
 
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, countVal);
 }
